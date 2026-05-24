@@ -1,0 +1,12 @@
+{
+  "name": "max",
+  "description": "Max Messenger channel for Claude Code — messaging bridge for the Russian Max bot platform. Manage pairing/access via /max:access.",
+  "version": "0.1.0",
+  "keywords": [
+    "max",
+    "maxhub",
+    "messaging",
+    "channel",
+    "mcp"
+  ]
+}

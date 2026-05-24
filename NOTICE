@@ -1,0 +1,19 @@
+claude-channel-max
+Copyright 2026 Mike Shogin (mshogin)
+
+This product is a derivative of:
+
+  claude-channel-telegram
+  Copyright Anthropic PBC
+  Licensed under the Apache License, Version 2.0
+  Source: https://github.com/anthropics/claude-plugins-official
+          (external_plugins/telegram/0.0.6)
+
+Changes from the original:
+
+  - Replaced grammy (Telegram Bot API) with @maxhub/max-bot-api
+    (Max Messenger Bot API)
+  - Removed features unsupported by Max: reactions, stickers
+  - Adjusted rate limits, text chunking (4000 vs 4096), and
+    edit window (24h) to Max API constraints
+  - Added bot-to-bot communication support (opt-in via config)

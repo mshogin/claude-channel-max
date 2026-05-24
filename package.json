@@ -1,0 +1,17 @@
+{
+  "name": "claude-channel-max",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": "./server.ts",
+  "scripts": {
+    "start": "bun server.ts",
+    "install-deps": "bun install --no-summary"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@maxhub/max-bot-api": "^0.2.2",
+    "zod": "^3.22.0",
+    "dotenv": "^16.0.0"
+  }
+}
