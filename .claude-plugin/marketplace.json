@@ -13,7 +13,7 @@
         "name": "Mikhail Shogin"
       },
       "category": "messaging",
-      "source": "."
+      "source": "./external_plugins/max"
     }
   ]
 }
