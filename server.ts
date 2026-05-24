@@ -357,30 +357,48 @@ async function emitInbound(
     return
   }
 
-  // Approved — push to Claude Code via MCP notification.
+  const meta = {
+    chat_id: String(chatId),
+    ...(mid ? { message_id: mid } : {}),
+    user: user?.username ?? user?.first_name ?? String(userId),
+    user_id: String(userId),
+    ts,
+    ...(attachmentUrl ? { attachment_url: attachmentUrl } : {}),
+    ...(attachmentMeta?.kind ? { attachment_kind: attachmentMeta.kind } : {}),
+    ...(attachmentMeta?.name ? { attachment_name: attachmentMeta.name } : {}),
+    ...(attachmentMeta?.mime ? { attachment_mime: attachmentMeta.mime } : {}),
+    ...(attachmentMeta?.size != null ? { attachment_size: String(attachmentMeta.size) } : {}),
+  }
+
+  // (1) Push to Claude via MCP notification — works for approved channels.
+  // For custom plugins still dropped silently (Anthropic bug #36503).
   log(`sending notification to Claude (text len=${text.length})`)
   try {
     await mcp.notification({
       method: 'notifications/claude/channel',
-      params: {
-        content: text,
-        meta: {
-          chat_id: String(chatId),
-          ...(mid ? { message_id: mid } : {}),
-          user: user?.username ?? user?.first_name ?? String(userId),
-          user_id: String(userId),
-          ts,
-          ...(attachmentUrl ? { attachment_url: attachmentUrl } : {}),
-          ...(attachmentMeta?.kind ? { attachment_kind: attachmentMeta.kind } : {}),
-          ...(attachmentMeta?.name ? { attachment_name: attachmentMeta.name } : {}),
-          ...(attachmentMeta?.mime ? { attachment_mime: attachmentMeta.mime } : {}),
-          ...(attachmentMeta?.size != null ? { attachment_size: String(attachmentMeta.size) } : {}),
-        },
-      },
+      params: { content: text, meta },
     })
     log(`notification sent OK`)
   } catch (err) {
     log(`notify FAILED: ${err}`)
+  }
+
+  // (2) Pending file — polling workaround. Skill /max-poll reads these
+  // and forwards to Claude Code session manually.
+  // SECURITY: this code runs ONLY after access.allowFrom check above
+  // (unauthorized users return early in pairing flow). Pending file
+  // is ONLY ever written for an approved user_id. Skill /max-poll
+  // additionally re-checks access.json before forwarding to Claude.
+  try {
+    const pendingDir = join(STATE_DIR, 'inbox', 'pending')
+    mkdirSync(pendingDir, { recursive: true })
+    const safeTs = ts.replace(/[:.]/g, '-')
+    const safeMid = (mid ?? 'no-mid').replace(/[^a-zA-Z0-9_-]/g, '_')
+    const file = join(pendingDir, `${safeTs}-${safeMid}.json`)
+    writeFileSync(file, JSON.stringify({ content: text, meta }, null, 2))
+    log(`pending file written: ${file}`)
+  } catch (err) {
+    log(`pending write FAILED: ${err}`)
   }
 }
 

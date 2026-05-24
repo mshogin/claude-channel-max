@@ -4,3 +4,4 @@ bun.lock
 .env
 .env.local
 data/
+.drafts/
