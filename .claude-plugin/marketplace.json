@@ -13,9 +13,7 @@
         "name": "Mikhail Shogin"
       },
       "category": "messaging",
-      "source": {
-        "source": "git-root"
-      }
+      "source": "."
     }
   ]
 }
