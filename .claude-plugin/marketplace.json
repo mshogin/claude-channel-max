@@ -1,0 +1,21 @@
+{
+  "name": "claude-channel-max",
+  "description": "Max Messenger channel for Claude Code (single-plugin marketplace)",
+  "owner": {
+    "name": "Mikhail Shogin",
+    "email": "mshogin@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "max",
+      "description": "Max Messenger channel for Claude Code — messaging bridge for the Russian Max bot platform. v0.1.0 minimal MVP.",
+      "author": {
+        "name": "Mikhail Shogin"
+      },
+      "category": "messaging",
+      "source": {
+        "source": "git-root"
+      }
+    }
+  ]
+}
